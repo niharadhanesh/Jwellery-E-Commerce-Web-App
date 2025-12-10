@@ -10,8 +10,11 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # Security
 # ------------------------------
 SECRET_KEY = os.environ.get("SECRET_KEY", "unsafe-secret-key")
-DEBUG = os.environ.get('DEBUG', 'False') == 'True'
-ALLOWED_HOSTS = ['*']  # Use your Render URL here in production, e.g., ['jwellery.onrender.com']
+DEBUG = os.environ.get("DEBUG", "False") == "True"
+
+# Add your Render domain after first deploy
+# Example: ['jwellery.onrender.com']
+ALLOWED_HOSTS = ['*']
 
 # ------------------------------
 # Applications
@@ -23,12 +26,15 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'app',  # Your Django app
+    'app',  # your app
 ]
 
+# ------------------------------
+# Middleware
+# ------------------------------
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware',  # Serve static files on Render
+    'whitenoise.middleware.WhiteNoiseMiddleware',  # Required for Render
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -39,10 +45,13 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'jwellery.urls'
 
+# ------------------------------
+# Templates
+# ------------------------------
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / 'templates'],
+        'DIRS': [BASE_DIR / "templates"],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -67,7 +76,7 @@ DATABASES = {
 }
 
 # ------------------------------
-# Password validation
+# Password Validation
 # ------------------------------
 AUTH_PASSWORD_VALIDATORS = [
     {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator'},
@@ -85,19 +94,22 @@ USE_I18N = True
 USE_TZ = True
 
 # ------------------------------
-# Static & Media files
+# Static Files (for Render)
 # ------------------------------
 STATIC_URL = '/static/'
-STATICFILES_DIRS = [BASE_DIR / 'static']
-STATIC_ROOT = BASE_DIR / 'staticfiles'
+STATICFILES_DIRS = [BASE_DIR / 'static']   # local static folder
+STATIC_ROOT = BASE_DIR / 'staticfiles'     # folder Render collects into
 
-# Use WhiteNoise for static files in production
+# WhiteNoise — required for production
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
+# ------------------------------
+# Media Files
+# ------------------------------
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
 # ------------------------------
-# Default primary key field
+# Default PK
 # ------------------------------
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
