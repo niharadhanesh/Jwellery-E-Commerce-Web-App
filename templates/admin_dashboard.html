@@ -1,0 +1,523 @@
+{% extends 'base_admin.html' %}
+{% load static %}
+
+{% block title %}Admin Dashboard{% endblock %}
+
+{% block pagetitle %}Dashboard{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* Stats Grid */
+    .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 25px;
+        margin-bottom: 30px;
+    }
+
+    .stat-card {
+        background: #fff;
+        padding: 25px;
+        border-radius: 15px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        transition: transform 0.3s, box-shadow 0.3s;
+    }
+
+    .stat-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+    }
+
+    .stat-info h3 {
+        font-size: 32px;
+        font-weight: 700;
+        margin-bottom: 8px;
+    }
+
+    .stat-info p {
+        color: #666;
+        font-size: 14px;
+        font-weight: 500;
+    }
+
+    .stat-icon {
+        width: 60px;
+        height: 60px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 28px;
+    }
+
+    .stat-card:nth-child(1) .stat-info h3 { color: #4CAF50; }
+    .stat-card:nth-child(1) .stat-icon { background: #e8f5e9; color: #4CAF50; }
+
+    .stat-card:nth-child(2) .stat-info h3 { color: #2196F3; }
+    .stat-card:nth-child(2) .stat-icon { background: #e3f2fd; color: #2196F3; }
+
+    .stat-card:nth-child(3) .stat-info h3 { color: #FF9800; }
+    .stat-card:nth-child(3) .stat-icon { background: #fff3e0; color: #FF9800; }
+
+    .stat-card:nth-child(4) .stat-info h3 { color: #9C27B0; }
+    .stat-card:nth-child(4) .stat-icon { background: #f3e5f5; color: #9C27B0; }
+
+    /* Charts Section */
+    .charts-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 25px;
+        margin-bottom: 30px;
+    }
+
+    .chart-card {
+        background: #fff;
+        padding: 25px;
+        border-radius: 15px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    }
+
+    .chart-card h3 {
+        font-size: 18px;
+        font-weight: 700;
+        margin-bottom: 20px;
+        color: #1a1a2e;
+    }
+
+    /* Recent Orders Table */
+    .table-card {
+        background: #fff;
+        padding: 25px;
+        border-radius: 15px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        overflow-x: auto;
+    }
+
+    .table-card h3 {
+        font-size: 18px;
+        font-weight: 700;
+        margin-bottom: 20px;
+        color: #1a1a2e;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    th {
+        text-align: left;
+        padding: 12px;
+        background: #f8f9fa;
+        font-weight: 600;
+        color: #1a1a2e;
+        font-size: 14px;
+    }
+
+    td {
+        padding: 12px;
+        border-bottom: 1px solid #f0f0f0;
+        font-size: 14px;
+        color: #666;
+    }
+
+    tr:hover {
+        background: #f8f9fa;
+    }
+
+    .status {
+        padding: 5px 12px;
+        border-radius: 20px;
+        font-size: 12px;
+        font-weight: 600;
+        display: inline-block;
+    }
+
+    .status.completed {
+        background: #e8f5e9;
+        color: #4CAF50;
+    }
+
+    .status.pending {
+        background: #fff3e0;
+        color: #FF9800;
+    }
+
+    .status.processing {
+        background: #e3f2fd;
+        color: #2196F3;
+    }
+
+    .status.cancelled {
+        background: #ffebee;
+        color: #f44336;
+    }
+
+    /* Activity Feed */
+    .activity-list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    .activity-item {
+        padding: 15px 0;
+        border-bottom: 1px solid #f0f0f0;
+        display: flex;
+        gap: 15px;
+    }
+
+    .activity-item:last-child {
+        border-bottom: none;
+    }
+
+    .activity-icon {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 16px;
+        flex-shrink: 0;
+    }
+
+    .activity-icon.order {
+        background: #e3f2fd;
+        color: #2196F3;
+    }
+
+    .activity-icon.user {
+        background: #f3e5f5;
+        color: #9C27B0;
+    }
+
+    .activity-icon.product {
+        background: #e8f5e9;
+        color: #4CAF50;
+    }
+
+    .activity-content h4 {
+        font-size: 14px;
+        font-weight: 600;
+        margin-bottom: 5px;
+        color: #1a1a2e;
+    }
+
+    .activity-content p {
+        font-size: 12px;
+        color: #999;
+    }
+
+    /* Action Button */
+    .view-all-btn {
+        display: inline-block;
+        margin-top: 15px;
+        padding: 10px 20px;
+        background: #1a1a2e;
+        color: #fff;
+        text-decoration: none;
+        border-radius: 8px;
+        font-size: 14px;
+        font-weight: 600;
+        transition: background 0.3s;
+    }
+
+    .view-all-btn:hover {
+        background: #0f3460;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 992px) {
+        .stats-grid {
+            grid-template-columns: repeat(2, 1fr);
+        }
+    }
+
+    @media (max-width: 768px) {
+        .stats-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .charts-grid {
+            grid-template-columns: 1fr;
+        }
+
+        table {
+            font-size: 12px;
+        }
+
+        th, td {
+            padding: 8px;
+        }
+
+        .stat-card {
+            padding: 20px;
+        }
+
+        .stat-info h3 {
+            font-size: 24px;
+        }
+
+        .stat-icon {
+            width: 50px;
+            height: 50px;
+            font-size: 24px;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .stat-card {
+            padding: 15px;
+        }
+
+        .stat-info h3 {
+            font-size: 20px;
+        }
+
+        .stat-info p {
+            font-size: 12px;
+        }
+
+        .chart-card, .table-card {
+            padding: 15px;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Stats Grid -->
+<div class="stats-grid">
+    <div class="stat-card">
+        <div class="stat-info">
+            <h3>${{ total_revenue|default:"0" }}</h3>
+            <p>Total Revenue</p>
+        </div>
+        <div class="stat-icon">
+            <i class="fas fa-dollar-sign"></i>
+        </div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-info">
+            <h3>{{ total_orders|default:"0" }}</h3>
+            <p>Total Orders</p>
+        </div>
+        <div class="stat-icon">
+            <i class="fas fa-shopping-cart"></i>
+        </div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-info">
+            <h3>{{ total_customers|default:"0" }}</h3>
+            <p>Total Customers</p>
+        </div>
+        <div class="stat-icon">
+            <i class="fas fa-users"></i>
+        </div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-info">
+            <h3>{{ total_products|default:"0" }}</h3>
+            <p>Total Products</p>
+        </div>
+        <div class="stat-icon">
+            <i class="fas fa-gem"></i>
+        </div>
+    </div>
+</div>
+
+<!-- Charts -->
+<div class="charts-grid">
+    <div class="chart-card">
+        <h3>Recent Activity</h3>
+        <ul class="activity-list">
+            {% if recent_activities %}
+                {% for activity in recent_activities %}
+                <li class="activity-item">
+                    <div class="activity-icon {{ activity.type }}">
+                        <i class="fas fa-{{ activity.icon }}"></i>
+                    </div>
+                    <div class="activity-content">
+                        <h4>{{ activity.title }}</h4>
+                        <p>{{ activity.description }} - {{ activity.time }}</p>
+                    </div>
+                </li>
+                {% endfor %}
+            {% else %}
+                <li class="activity-item">
+                    <div class="activity-icon order">
+                        <i class="fas fa-shopping-cart"></i>
+                    </div>
+                    <div class="activity-content">
+                        <h4>New Order Received</h4>
+                        <p>Order #1234 - $129.99 - 5 minutes ago</p>
+                    </div>
+                </li>
+                <li class="activity-item">
+                    <div class="activity-icon user">
+                        <i class="fas fa-user-plus"></i>
+                    </div>
+                    <div class="activity-content">
+                        <h4>New Customer Registered</h4>
+                        <p>John Smith joined - 15 minutes ago</p>
+                    </div>
+                </li>
+                <li class="activity-item">
+                    <div class="activity-icon product">
+                        <i class="fas fa-gem"></i>
+                    </div>
+                    <div class="activity-content">
+                        <h4>Product Added</h4>
+                        <p>Diamond Ring added to inventory - 1 hour ago</p>
+                    </div>
+                </li>
+            {% endif %}
+        </ul>
+    </div>
+
+    <div class="chart-card">
+        <h3>Quick Stats</h3>
+        <ul class="activity-list">
+            <li class="activity-item">
+                <div class="activity-icon" style="background: #e8f5e9; color: #4CAF50;">
+                    <i class="fas fa-arrow-up"></i>
+                </div>
+                <div class="activity-content">
+                    <h4>Sales Growth</h4>
+                    <p>{{ sales_growth|default:"+23.5" }}% from last month</p>
+                </div>
+            </li>
+            <li class="activity-item">
+                <div class="activity-icon" style="background: #e3f2fd; color: #2196F3;">
+                    <i class="fas fa-clock"></i>
+                </div>
+                <div class="activity-content">
+                    <h4>Pending Orders</h4>
+                    <p>{{ pending_orders|default:"42" }} orders awaiting processing</p>
+                </div>
+            </li>
+            <li class="activity-item">
+                <div class="activity-icon" style="background: #fff3e0; color: #FF9800;">
+                    <i class="fas fa-box"></i>
+                </div>
+                <div class="activity-content">
+                    <h4>Low Stock Alert</h4>
+                    <p>{{ low_stock_count|default:"8" }} products need restocking</p>
+                </div>
+            </li>
+            <li class="activity-item">
+                <div class="activity-icon" style="background: #f3e5f5; color: #9C27B0;">
+                    <i class="fas fa-star"></i>
+                </div>
+                <div class="activity-content">
+                    <h4>New Reviews</h4>
+                    <p>{{ pending_reviews|default:"15" }} customer reviews pending</p>
+                </div>
+            </li>
+        </ul>
+    </div>
+</div>
+
+<!-- Recent Orders Table -->
+<div class="table-card">
+    <h3>Recent Orders</h3>
+    <table>
+        <thead>
+            <tr>
+                <th>Order ID</th>
+                <th>Customer</th>
+                <th>Product</th>
+                <th>Amount</th>
+                <th>Status</th>
+                <th>Date</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% if recent_orders %}
+                {% for order in recent_orders %}
+                <tr>
+                    <td>#{{ order.id }}</td>
+                    <td>{{ order.customer_name }}</td>
+                    <td>{{ order.product_name }}</td>
+                    <td>${{ order.amount }}</td>
+                    <td>
+                        <span class="status {{ order.status|lower }}">
+                            {{ order.status|title }}
+                        </span>
+                    </td>
+                    <td>{{ order.created_at|date:"M d, Y" }}</td>
+                </tr>
+                {% endfor %}
+            {% else %}
+                <tr>
+                    <td>#1234</td>
+                    <td>John Smith</td>
+                    <td>Diamond Ring</td>
+                    <td>$2,499</td>
+                    <td><span class="status completed">Completed</span></td>
+                    <td>Dec 10, 2025</td>
+                </tr>
+                <tr>
+                    <td>#1233</td>
+                    <td>Sarah Johnson</td>
+                    <td>Gold Necklace</td>
+                    <td>$1,299</td>
+                    <td><span class="status pending">Pending</span></td>
+                    <td>Dec 10, 2025</td>
+                </tr>
+                <tr>
+                    <td>#1232</td>
+                    <td>Mike Williams</td>
+                    <td>Silver Bracelet</td>
+                    <td>$599</td>
+                    <td><span class="status completed">Completed</span></td>
+                    <td>Dec 9, 2025</td>
+                </tr>
+                <tr>
+                    <td>#1231</td>
+                    <td>Emily Davis</td>
+                    <td>Pearl Earrings</td>
+                    <td>$899</td>
+                    <td><span class="status cancelled">Cancelled</span></td>
+                    <td>Dec 9, 2025</td>
+                </tr>
+                <tr>
+                    <td>#1230</td>
+                    <td>Robert Brown</td>
+                    <td>Platinum Watch</td>
+                    <td>$3,499</td>
+                    <td><span class="status completed">Completed</span></td>
+                    <td>Dec 8, 2025</td>
+                </tr>
+            {% endif %}
+        </tbody>
+    </table>
+    <a href="{% url 'admin_orders' %}" class="view-all-btn">View All Orders</a>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Add interactivity if needed
+    document.addEventListener('DOMContentLoaded', function() {
+        // Animate stat cards on load
+        const statCards = document.querySelectorAll('.stat-card');
+        statCards.forEach((card, index) => {
+            setTimeout(() => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(20px)';
+                card.style.transition = 'all 0.5s ease';
+                
+                setTimeout(() => {
+                    card.style.opacity = '1';
+                    card.style.transform = 'translateY(0)';
+                }, 50);
+            }, index * 100);
+        });
+    });
+</script>
+{% endblock %}

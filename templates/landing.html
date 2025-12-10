@@ -1,0 +1,571 @@
+{% extends "base.html" %}
+
+{% load static %}
+
+{% block title %}Home | Jewel Store{% endblock %}
+
+{% block content %}
+
+<style>
+    .hero-section {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 50px 0;
+    }
+
+    .hero-left {
+        width: 48%;
+        padding-right: 20px;
+    }
+
+    .hero-left h1 {
+        font-size: 48px;
+        font-weight: 600;
+        color: #111;
+        margin-bottom: 15px;
+    }
+
+    .hero-left p {
+        font-size: 15px;
+        color: #333;
+        margin-bottom: 25px;
+        line-height: 1.7;
+        width: 90%;
+    }
+
+    .hero-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        padding: 10px 20px;
+        border: 1px solid #000;
+        border-radius: 50px;
+        text-decoration: none;
+        color: #000;
+        font-size: 15px;
+        font-weight: 600;
+        transition: 0.3s;
+    }
+
+    .hero-btn:hover {
+        background: #000;
+        color: #fff;
+    }
+
+    .hero-right {
+        width: 48%;
+    }
+
+    .hero-right img {
+        width: 100%;
+        border-radius: 8px;
+    }
+
+    .hero-center-text {
+        text-align: center;
+        width: 75%;
+        margin: 50px auto 0;
+        font-size: 15px;
+        line-height: 1.8;
+        color: #444;
+    }
+
+    @media(max-width: 850px) {
+        .hero-section {
+            flex-direction: column;
+        }
+        .hero-left, .hero-right {
+            width: 100%;
+        }
+    }
+</style>
+
+<!-- HOME SECTION -->
+<div id="home">
+    <!-- HERO SECTION -->
+    <div class="hero-section">
+
+        <!-- LEFT TEXT -->
+        <div class="hero-left">
+            <h1>The Best Jeweler For You</h1>
+            <p>
+                He moonlights difficult engrossed it, sportsmen interested has all difficulty gay assistance joy perceived 
+                end knowledge certainly day sweetness.
+            </p>
+
+            <a class="hero-btn" href="#shop-section">
+                Explore Now ➜
+            </a>
+        </div>
+
+        <!-- RIGHT IMAGE -->
+        <div class="hero-right">
+            <img src="{% static 'images/jwel1.jpg' %}" alt="">
+        </div>
+
+    </div>
+
+    <!-- CENTER TEXT BELOW HERO -->
+    <div class="hero-center-text">
+        Post no so what deal evil rent by real in. But her ready least set lived spite solid.
+        September how men saw tolerably two behavior arranging. She offices for highest and replied one venture pastime.
+    </div>
+</div>
+
+
+<!-- JEWELRY FEATURE SECTION -->
+<style>
+.jewel-feature-section {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    gap: 30px;
+    padding: 80px 60px;
+    text-align: center;
+    background: #fff;
+}
+
+.jewel-feature-left,
+.jewel-feature-right {
+    flex: 1 1 300px;
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+}
+
+.jewel-feature-left img,
+.jewel-feature-right img {
+    width: 100%;
+    border-radius: 8px;
+}
+
+.jewel-feature-center {
+    flex: 1 1 400px;
+    max-width: 500px;
+}
+
+.jewel-feature-center small {
+    font-size: 12px;
+    color: #777;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+}
+
+.jewel-feature-center h1 {
+    font-size: 38px;
+    font-weight: 600;
+    margin: 15px 0;
+}
+
+.jewel-feature-center button {
+    background: #000;
+    color: #fff;
+    padding: 12px 30px;
+    border: none;
+    border-radius: 50px;
+    font-size: 15px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.jewel-feature-center button:hover {
+    background: #444;
+}
+
+.jewel-feature-bottom {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    margin-top: 50px;
+}
+
+.jewel-feature-bottom img {
+    width: 60px;
+    height: 60px;
+}
+@media(max-width: 950px) {
+    .jewel-feature-section {
+        flex-direction: column;
+        padding: 50px 20px;
+    }
+    .jewel-feature-left,
+    .jewel-feature-right,
+    .jewel-feature-center {
+        width: 100%;
+        max-width: 100%;
+    }
+}
+</style>
+
+<div class="jewel-feature-section">
+
+    <!-- LEFT IMAGES -->
+    <div class="jewel-feature-left">
+        <img src="{% static 'images/jwel1.jpg' %}" alt="jewel1">
+        <img src="{% static 'images/jwel6.webp' %}" alt="jewel2">
+    </div>
+
+    <!-- CENTER TEXT & BUTTON -->
+    <div class="jewel-feature-center">
+        <small>Buy More & Save More</small>
+        <h1>Best <em>Jewelry</em> Under One Roof.</h1>
+        <button onclick="window.location.href='#shop-section'">Shop Now</button>
+    </div>
+
+    <!-- RIGHT IMAGE -->
+    <div class="jewel-feature-right">
+        <img src="{% static 'images/jwel3.jpg' %}" alt="jewel3">
+    </div>
+
+</div>
+
+
+
+
+<!-- OUR STORY SECTION -->
+<style>
+.our-story-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 80px 60px;
+    background: #fff;
+    gap: 50px;
+    scroll-margin-top: 100px;
+}
+
+.our-story-top {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    gap: 40px;
+    width: 100%;
+}
+
+.our-story-left {
+    flex: 1 1 400px;
+    max-width: 600px;
+}
+
+.our-story-left h2 {
+    font-size: 36px;
+    font-weight: 600;
+    margin-bottom: 20px;
+}
+
+.our-story-left p {
+    font-size: 15px;
+    line-height: 1.8;
+    color: #444;
+    margin-bottom: 30px;
+}
+
+.our-story-stats {
+    display: flex;
+    gap: 40px;
+    flex-wrap: wrap;
+}
+
+.our-story-stats div {
+    text-align: left;
+}
+
+.our-story-stats h3 {
+    font-size: 24px;
+    font-weight: 600;
+}
+
+.our-story-stats p {
+    font-size: 13px;
+    color: #777;
+}
+
+.our-story-right {
+    flex: 1 1 400px;
+    max-width: 500px;
+}
+
+.our-story-right img {
+    width: 100%;
+    border-radius: 12px;
+    object-fit: cover;
+}
+
+.our-story-cards {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    flex-wrap: wrap;
+    width: 100%;
+}
+
+.our-story-card {
+    flex: 1 1 250px;
+    background: #f7f8fb;
+    padding: 25px;
+    border-radius: 12px;
+    text-align: center;
+    transition: 0.3s;
+}
+
+.our-story-card i {
+    font-size: 28px;
+    color: #000;
+    margin-bottom: 15px;
+}
+
+.our-story-card h4 {
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 10px;
+}
+
+.our-story-card p {
+    font-size: 13px;
+    color: #555;
+    line-height: 1.6;
+}
+
+/* Responsive */
+@media(max-width: 950px) {
+    .our-story-top {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+    .our-story-left, .our-story-right {
+        max-width: 100%;
+    }
+    .our-story-stats {
+        justify-content: center;
+    }
+}
+</style>
+
+<div id="about-section" class="our-story-section">
+
+    <!-- Top Section: Text + Image -->
+    <div class="our-story-top">
+        <div class="our-story-left">
+            <h2>Our Story</h2>
+            <p>Demesne far hearted supposed venture and excited to see had had. Dependent on so extremely delivered by. Yet no jokes worse her why. Bed one supposing breakfast day fulfilled off depending questions. Whatever boy her exertion his extended. Ecstatic followed handsome drawings entirely Mrs one yet outweigh.</p>
+            <div class="our-story-stats">
+                <div>
+                    <h3>90%</h3>
+                    <p>Jewelry Item</p>
+                </div>
+                <div>
+                    <h3>1.2m</h3>
+                    <p>Happy Customers</p>
+                </div>
+                <div>
+                    <h3>5+</h3>
+                    <p>Years of experience</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="our-story-right">
+            <img src="{% static 'images/jwel2.webp' %}" alt="Our Story Image">
+        </div>
+    </div>
+
+    <!-- Bottom Info Cards -->
+    <div class="our-story-cards">
+        <div class="our-story-card">
+            <i class="fas fa-box-open"></i>
+            <h4>Free Shipping</h4>
+            <p>Perceived end knowledge certainly day sweetness why cordially. Ask a quick six seven offer see among.</p>
+        </div>
+        <div class="our-story-card">
+            <i class="fas fa-truck-fast"></i>
+            <h4>Fast Delivery</h4>
+            <p>Parlors waiting so against me no. Wishing calling is warrant settled was lucky.</p>
+        </div>
+        <div class="our-story-card">
+            <i class="fas fa-award"></i>
+            <h4>100% Quality Guarantee</h4>
+            <p>Unaffected at ye of compliment alteration to. Place voice no arises along to.</p>
+        </div>
+    </div>
+
+</div>
+
+
+<section id="shop-section" class="shop-section">
+    <h2>Shop</h2>
+    <div class="category-filters">
+        <button>Necklaces</button>
+        <button>Earrings</button>
+        <button>Bracelets</button>
+        <button>Rings</button>
+        <button>Pendants</button>
+        <button>Brooches</button>
+    </div>
+    
+    <div class="product-grid">
+        <div class="product-card">
+            <img src="{% static 'images/jwel7.webp' %}" alt="Copper Gold plated" height="330px">
+            <h3>White Brass American Diamond </h3>
+            <p>$79.50 USD</p>
+            <span class="arrow">→</span>
+        </div>
+        <div class="product-card">
+            <img src="{% static 'images/jwel8.avif' %}" alt="Gold Hoop Earrings">
+            <h3>Gold Hoop Earrings</h3>
+            <p>$49.00 USD</p>
+            <span class="arrow">→</span>
+        </div>
+        <div class="product-card">
+            <img src="{% static 'images/ring1.jpg' %}" alt="Zircon Gold Plated Ring">
+            <h3>Zircon Gold Plated Ring</h3>
+            <p>$45.75 USD</p>
+            <span class="arrow">→</span>
+        </div>
+        <div class="product-card">
+            <img src="{% static 'images/jwel9.png' %}" alt="Gold Hoop Bracelet">
+            <h3>Rose Gold Bangle</h3>
+            <p>$50.74 USD</p>
+            <span class="arrow">→</span>
+        </div>
+    </div>
+     <div class="product-grid">
+         <div class="product-card">
+            <img src="{% static 'images/jwel8.avif' %}" alt="Gold Hoop Earrings">
+            <h3>Gold Hoop Earrings</h3>
+            <p>$49.00 USD</p>
+            <span class="arrow">→</span>
+        </div>
+        <div class="product-card">
+            <img src="{% static 'images/jwel7.webp' %}" alt="Copper Gold plated" height="330px">
+            <h3>White Brass American Diamond </h3>
+            <p>$79.50 USD</p>
+            <span class="arrow">→</span>
+        </div>
+         <div class="product-card">
+            <img src="{% static 'images/jwel9.png' %}" alt="Gold Hoop Bracelet">
+            <h3>Rose Gold Bangle</h3>
+            <p>$50.74 USD</p>
+            <span class="arrow">→</span>
+        </div>
+       
+        <div class="product-card">
+            <img src="{% static 'images/ring1.jpg' %}" alt="Zircon Gold Plated Ring">
+            <h3>Zircon Gold Plated Ring</h3>
+            <p>$45.75 USD</p>
+            <span class="arrow">→</span>
+        </div>
+    </div>
+</section>
+
+
+
+<style>
+.shop-section {
+    padding: 50px 20px;
+    text-align: center;
+    scroll-margin-top: 100px;
+}
+
+.shop-section h2 {
+    font-size: 36px;
+    margin-bottom: 20px;
+}
+
+.category-filters {
+    margin-bottom: 40px;
+}
+
+.category-filters button {
+    background: #f5f5f5;
+    border: 1px solid #ccc;
+    padding: 5px 15px;
+    margin: 0 5px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.category-filters button:hover {
+    background: #e0e0e0;
+}
+
+.product-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 30px;
+}
+
+.product-card {
+    background: #f9f9f9;
+    padding: 15px;
+    border-radius: 10px;
+    text-align: left;
+    position: relative;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.product-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+}
+
+.product-card img {
+    width: 100%;
+    border-radius: 10px;
+    margin-bottom: 10px;
+}
+
+.product-card h3 {
+    font-size: 16px;
+    margin: 5px 0;
+}
+
+.product-card p {
+    font-size: 14px;
+    color: #888;
+}
+
+.product-card .arrow {
+    position: absolute;
+    bottom: 15px;
+    right: 15px;
+    font-size: 18px;
+    color: #333;
+}
+</style>
+
+<div class="image-section container">
+    <img src="{% static 'images/buy.webp' %}" alt="Buy Image">
+</div>
+
+<style>
+    .image-section {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 50px 0;
+    }
+
+    .image-section img {
+        width: 90%;              /* Increased width */
+        max-width: 100%;       /* Much larger max size */
+        height: auto;
+        border-radius: 25px;
+        box-shadow: 0 15px 35px rgba(0,0,0,0.18);
+        transition: transform 0.35s ease, box-shadow 0.35s ease;
+        object-fit: cover;
+    }
+
+    .image-section img:hover {
+        transform: scale(1.04);
+        box-shadow: 0 20px 45px rgba(0,0,0,0.25);
+    }
+</style>
+
+
+
+{% endblock %}

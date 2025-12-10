@@ -1,0 +1,724 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f4f6f9;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 250px;
+            height: 100vh;
+            background: #1a1a2e;
+            padding: 30px 20px;
+            box-shadow: 5px 0 25px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+            z-index: 1000;
+            overflow-y: auto;
+        }
+
+        .sidebar.closed {
+            transform: translateX(-250px);
+        }
+
+        .sidebar-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 40px;
+        }
+
+        .sidebar h2 {
+            color: #fff;
+            font-size: 22px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .close-btn {
+            display: none;
+            color: #fff;
+            font-size: 24px;
+            cursor: pointer;
+            background: none;
+            border: none;
+        }
+
+        .sidebar a {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 14px 16px;
+            margin-bottom: 8px;
+            border-radius: 10px;
+            color: #ddd;
+            text-decoration: none;
+            font-size: 15px;
+            transition: all 0.3s;
+        }
+
+        .sidebar a:hover,
+        .sidebar a.active {
+            background: #0f3460;
+            color: #fff;
+            transform: translateX(5px);
+        }
+
+        .sidebar a i {
+            width: 20px;
+            text-align: center;
+        }
+
+        /* Main Content */
+        .main-content {
+            margin-left: 250px;
+            padding: 30px;
+            min-height: 100vh;
+            transition: margin-left 0.3s ease;
+        }
+
+        .main-content.expanded {
+            margin-left: 0;
+        }
+
+        /* Top bar */
+        .admin-topbar {
+            background: #fff;
+            padding: 20px 25px;
+            border-radius: 15px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .topbar-left {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .menu-btn {
+            display: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: #1a1a2e;
+            background: none;
+            border: none;
+        }
+
+        .admin-topbar h1 {
+            font-size: 24px;
+            font-weight: 700;
+            color: #1a1a2e;
+        }
+
+        .admin-profile {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 14px;
+            font-weight: 600;
+            color: #1a1a2e;
+        }
+
+        .admin-profile img {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid #0f3460;
+        }
+
+        /* Dashboard Stats */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: #fff;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+        }
+
+        .stat-info h3 {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .stat-info p {
+            color: #666;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .stat-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+        }
+
+        .stat-card:nth-child(1) .stat-info h3 { color: #4CAF50; }
+        .stat-card:nth-child(1) .stat-icon { background: #e8f5e9; color: #4CAF50; }
+
+        .stat-card:nth-child(2) .stat-info h3 { color: #2196F3; }
+        .stat-card:nth-child(2) .stat-icon { background: #e3f2fd; color: #2196F3; }
+
+        .stat-card:nth-child(3) .stat-info h3 { color: #FF9800; }
+        .stat-card:nth-child(3) .stat-icon { background: #fff3e0; color: #FF9800; }
+
+        .stat-card:nth-child(4) .stat-info h3 { color: #9C27B0; }
+        .stat-card:nth-child(4) .stat-icon { background: #f3e5f5; color: #9C27B0; }
+
+        /* Charts Section */
+        .charts-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+
+        .chart-card {
+            background: #fff;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+
+        .chart-card h3 {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            color: #1a1a2e;
+        }
+
+        /* Recent Orders Table */
+        .table-card {
+            background: #fff;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            overflow-x: auto;
+        }
+
+        .table-card h3 {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            color: #1a1a2e;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th {
+            text-align: left;
+            padding: 12px;
+            background: #f8f9fa;
+            font-weight: 600;
+            color: #1a1a2e;
+            font-size: 14px;
+        }
+
+        td {
+            padding: 12px;
+            border-bottom: 1px solid #f0f0f0;
+            font-size: 14px;
+            color: #666;
+        }
+
+        .status {
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .status.completed {
+            background: #e8f5e9;
+            color: #4CAF50;
+        }
+
+        .status.pending {
+            background: #fff3e0;
+            color: #FF9800;
+        }
+
+        .status.cancelled {
+            background: #ffebee;
+            color: #f44336;
+        }
+
+        /* Activity Feed */
+        .activity-list {
+            list-style: none;
+        }
+
+        .activity-item {
+            padding: 15px 0;
+            border-bottom: 1px solid #f0f0f0;
+            display: flex;
+            gap: 15px;
+        }
+
+        .activity-item:last-child {
+            border-bottom: none;
+        }
+
+        .activity-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            flex-shrink: 0;
+        }
+
+        .activity-icon.order {
+            background: #e3f2fd;
+            color: #2196F3;
+        }
+
+        .activity-icon.user {
+            background: #f3e5f5;
+            color: #9C27B0;
+        }
+
+        .activity-icon.product {
+            background: #e8f5e9;
+            color: #4CAF50;
+        }
+
+        .activity-content h4 {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 5px;
+            color: #1a1a2e;
+        }
+
+        .activity-content p {
+            font-size: 12px;
+            color: #999;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 992px) {
+            .menu-btn {
+                display: block;
+            }
+
+            .close-btn {
+                display: block;
+            }
+
+            .sidebar {
+                transform: translateX(-250px);
+            }
+
+            .sidebar.open {
+                transform: translateX(0);
+            }
+
+            .main-content {
+                margin-left: 0;
+            }
+
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .main-content {
+                padding: 20px 15px;
+            }
+
+            .admin-topbar {
+                padding: 15px;
+            }
+
+            .admin-topbar h1 {
+                font-size: 20px;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .charts-grid {
+                grid-template-columns: 1fr;
+            }
+
+            table {
+                font-size: 12px;
+            }
+
+            th, td {
+                padding: 8px;
+            }
+
+            .stat-card {
+                padding: 20px;
+            }
+
+            .stat-info h3 {
+                font-size: 24px;
+            }
+
+            .stat-icon {
+                width: 50px;
+                height: 50px;
+                font-size: 24px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .admin-topbar h1 {
+                font-size: 18px;
+            }
+
+            .admin-profile {
+                font-size: 12px;
+            }
+
+            .admin-profile img {
+                width: 35px;
+                height: 35px;
+            }
+
+            .stat-card {
+                padding: 15px;
+            }
+
+            .stat-info h3 {
+                font-size: 20px;
+            }
+
+            .stat-info p {
+                font-size: 12px;
+            }
+        }
+
+        /* Overlay for mobile */
+        .overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 999;
+        }
+
+        .overlay.active {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Overlay -->
+    <div class="overlay" id="overlay"></div>
+
+    <!-- Sidebar -->
+    <div class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <h2>Admin</h2>
+            <button class="close-btn" id="closeSidebar">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <a href="#" class="active"><i class="fas fa-home"></i> Dashboard</a>
+        <a href="#"><i class="fas fa-shopping-cart"></i> Orders</a>
+        <a href="#"><i class="fas fa-gem"></i> Products</a>
+        <a href="#"><i class="fas fa-users"></i> Customers</a>
+        <a href="#"><i class="fas fa-chart-line"></i> Analytics</a>
+        <a href="#"><i class="fas fa-tags"></i> Categories</a>
+        <a href="#"><i class="fas fa-cog"></i> Settings</a>
+        <a href="{%  url 'logout' %}"><i class="fas fa-sign-out-alt"></i> Logout</a>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content" id="mainContent">
+        <div class="admin-topbar">
+            <div class="topbar-left">
+                <button class="menu-btn" id="menuBtn">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <h1>Dashboard</h1>
+            </div>
+            <div class="admin-profile">
+                <span>Admin User</span>
+                <img src="https://ui-avatars.com/api/?name=Admin+User&background=0f3460&color=fff" alt="Profile">
+            </div>
+        </div>
+
+        <!-- Stats Grid -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-info">
+                    <h3>$54,239</h3>
+                    <p>Total Revenue</p>
+                </div>
+                <div class="stat-icon">
+                    <i class="fas fa-dollar-sign"></i>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-info">
+                    <h3>1,429</h3>
+                    <p>Total Orders</p>
+                </div>
+                <div class="stat-icon">
+                    <i class="fas fa-shopping-cart"></i>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-info">
+                    <h3>893</h3>
+                    <p>Total Customers</p>
+                </div>
+                <div class="stat-icon">
+                    <i class="fas fa-users"></i>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-info">
+                    <h3>567</h3>
+                    <p>Total Products</p>
+                </div>
+                <div class="stat-icon">
+                    <i class="fas fa-gem"></i>
+                </div>
+            </div>
+        </div>
+
+        <!-- Charts -->
+        <div class="charts-grid">
+            <div class="chart-card">
+                <h3>Recent Activity</h3>
+                <ul class="activity-list">
+                    <li class="activity-item">
+                        <div class="activity-icon order">
+                            <i class="fas fa-shopping-cart"></i>
+                        </div>
+                        <div class="activity-content">
+                            <h4>New Order Received</h4>
+                            <p>Order #1234 - $129.99 - 5 minutes ago</p>
+                        </div>
+                    </li>
+                    <li class="activity-item">
+                        <div class="activity-icon user">
+                            <i class="fas fa-user-plus"></i>
+                        </div>
+                        <div class="activity-content">
+                            <h4>New Customer Registered</h4>
+                            <p>John Smith joined - 15 minutes ago</p>
+                        </div>
+                    </li>
+                    <li class="activity-item">
+                        <div class="activity-icon product">
+                            <i class="fas fa-gem"></i>
+                        </div>
+                        <div class="activity-content">
+                            <h4>Product Added</h4>
+                            <p>Diamond Ring added to inventory - 1 hour ago</p>
+                        </div>
+                    </li>
+                    <li class="activity-item">
+                        <div class="activity-icon order">
+                            <i class="fas fa-check-circle"></i>
+                        </div>
+                        <div class="activity-content">
+                            <h4>Order Completed</h4>
+                            <p>Order #1230 delivered - 2 hours ago</p>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="chart-card">
+                <h3>Quick Stats</h3>
+                <ul class="activity-list">
+                    <li class="activity-item">
+                        <div class="activity-icon" style="background: #e8f5e9; color: #4CAF50;">
+                            <i class="fas fa-arrow-up"></i>
+                        </div>
+                        <div class="activity-content">
+                            <h4>Sales Growth</h4>
+                            <p>+23.5% from last month</p>
+                        </div>
+                    </li>
+                    <li class="activity-item">
+                        <div class="activity-icon" style="background: #e3f2fd; color: #2196F3;">
+                            <i class="fas fa-clock"></i>
+                        </div>
+                        <div class="activity-content">
+                            <h4>Pending Orders</h4>
+                            <p>42 orders awaiting processing</p>
+                        </div>
+                    </li>
+                    <li class="activity-item">
+                        <div class="activity-icon" style="background: #fff3e0; color: #FF9800;">
+                            <i class="fas fa-box"></i>
+                        </div>
+                        <div class="activity-content">
+                            <h4>Low Stock Alert</h4>
+                            <p>8 products need restocking</p>
+                        </div>
+                    </li>
+                    <li class="activity-item">
+                        <div class="activity-icon" style="background: #f3e5f5; color: #9C27B0;">
+                            <i class="fas fa-star"></i>
+                        </div>
+                        <div class="activity-content">
+                            <h4>New Reviews</h4>
+                            <p>15 customer reviews pending</p>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Recent Orders Table -->
+        <div class="table-card">
+            <h3>Recent Orders</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Order ID</th>
+                        <th>Customer</th>
+                        <th>Product</th>
+                        <th>Amount</th>
+                        <th>Status</th>
+                        <th>Date</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>#1234</td>
+                        <td>John Smith</td>
+                        <td>Diamond Ring</td>
+                        <td>$2,499</td>
+                        <td><span class="status completed">Completed</span></td>
+                        <td>Dec 10, 2025</td>
+                    </tr>
+                    <tr>
+                        <td>#1233</td>
+                        <td>Sarah Johnson</td>
+                        <td>Gold Necklace</td>
+                        <td>$1,299</td>
+                        <td><span class="status pending">Pending</span></td>
+                        <td>Dec 10, 2025</td>
+                    </tr>
+                    <tr>
+                        <td>#1232</td>
+                        <td>Mike Williams</td>
+                        <td>Silver Bracelet</td>
+                        <td>$599</td>
+                        <td><span class="status completed">Completed</span></td>
+                        <td>Dec 9, 2025</td>
+                    </tr>
+                    <tr>
+                        <td>#1231</td>
+                        <td>Emily Davis</td>
+                        <td>Pearl Earrings</td>
+                        <td>$899</td>
+                        <td><span class="status cancelled">Cancelled</span></td>
+                        <td>Dec 9, 2025</td>
+                    </tr>
+                    <tr>
+                        <td>#1230</td>
+                        <td>Robert Brown</td>
+                        <td>Platinum Watch</td>
+                        <td>$3,499</td>
+                        <td><span class="status completed">Completed</span></td>
+                        <td>Dec 8, 2025</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        const menuBtn = document.getElementById('menuBtn');
+        const sidebar = document.getElementById('sidebar');
+        const closeSidebar = document.getElementById('closeSidebar');
+        const overlay = document.getElementById('overlay');
+        const mainContent = document.getElementById('mainContent');
+
+        menuBtn.addEventListener('click', () => {
+            sidebar.classList.add('open');
+            overlay.classList.add('active');
+        });
+
+        closeSidebar.addEventListener('click', () => {
+            sidebar.classList.remove('open');
+            overlay.classList.remove('active');
+        });
+
+        overlay.addEventListener('click', () => {
+            sidebar.classList.remove('open');
+            overlay.classList.remove('active');
+        });
+
+        // Active link handling
+        const sidebarLinks = document.querySelectorAll('.sidebar a');
+        sidebarLinks.forEach(link => {
+            link.addEventListener('click', (e) => {
+                sidebarLinks.forEach(l => l.classList.remove('active'));
+                link.classList.add('active');
+                
+                // Close sidebar on mobile after clicking
+                if (window.innerWidth <= 992) {
+                    sidebar.classList.remove('open');
+                    overlay.classList.remove('active');
+                }
+            });
+        });
+    </script>
+
+</body>
+</html>

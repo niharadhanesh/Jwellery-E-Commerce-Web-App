@@ -1,0 +1,280 @@
+
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Login | Jewel Store{% endblock %}
+
+{% block content %}
+
+<style>
+    .login-bg {
+        width: 100%;
+        min-height: 100vh;
+        background: url("{% static 'images/log.jpg' %}") no-repeat center center/cover;
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+        padding: 40px;
+        position: relative;
+    }
+
+    .login-bg::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0,0,0,0.1); /* Very light shade */
+        z-index: 1;
+    }
+
+    .login-container {
+        position: relative;
+        z-index: 2;
+        margin-left: 10%;
+        max-width: 450px;
+    }
+
+    .login-card {
+        background: rgba(255, 255, 255, 0.95);
+        padding: 45px 40px;
+        border-radius: 20px;
+        box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        backdrop-filter: blur(10px);
+        animation: slideInLeft 0.8s ease-out;
+    }
+
+    .login-header {
+        margin-bottom: 35px;
+    }
+
+    .login-header h2 {
+        font-size: 32px;
+        font-weight: 700;
+        color: #111;
+        margin-bottom: 8px;
+    }
+
+    .login-header p {
+        font-size: 14px;
+        color: #666;
+    }
+
+    .input-group {
+        position: relative;
+        margin-bottom: 25px;
+    }
+
+    .input-group i {
+        position: absolute;
+        left: 15px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #888;
+        font-size: 16px;
+    }
+
+    .login-card input {
+        width: 100%;
+        padding: 14px 15px 14px 45px;
+        border-radius: 12px;
+        border: 2px solid #e0e0e0;
+        font-size: 15px;
+        outline: none;
+        transition: all 0.3s ease;
+        background: #fafafa;
+    }
+
+    .login-card input:focus {
+        border-color: #000;
+        background: #fff;
+        box-shadow: 0 0 0 4px rgba(0,0,0,0.05);
+    }
+
+    .forgot-password {
+        text-align: right;
+        margin-bottom: 25px;
+    }
+
+    .forgot-password a {
+        font-size: 13px;
+        color: #666;
+        text-decoration: none;
+        transition: 0.3s;
+    }
+
+    .forgot-password a:hover {
+        color: #000;
+    }
+
+    .login-btn {
+        width: 100%;
+        padding: 15px;
+        background: linear-gradient(135deg, #000 0%, #333 100%);
+        color: #fff;
+        border-radius: 12px;
+        font-size: 16px;
+        font-weight: 600;
+        border: none;
+        cursor: pointer;
+        /* transition: all 0.3s ease; */
+        box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    }
+
+    .login-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+    }
+
+    .login-btn:active {
+        transform: translateY(0);
+    }
+
+    .divider {
+        display: flex;
+        align-items: center;
+        margin: 30px 0;
+        color: #999;
+        font-size: 13px;
+    }
+
+    .divider::before,
+    .divider::after {
+        content: '';
+        flex: 1;
+        height: 1px;
+        background: #ddd;
+    }
+
+    .divider::before {
+        margin-right: 10px;
+    }
+
+    .divider::after {
+        margin-left: 10px;
+    }
+
+    .social-login {
+        display: flex;
+        gap: 15px;
+        margin-bottom: 25px;
+    }
+
+    .social-btn {
+        flex: 1;
+        padding: 12px;
+        border: 2px solid #e0e0e0;
+        border-radius: 12px;
+        background: #fff;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        font-size: 20px;
+        color: #666;
+    }
+
+    .social-btn:hover {
+        border-color: #000;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+
+    .login-footer {
+        text-align: center;
+        margin-top: 25px;
+        font-size: 14px;
+        color: #666;
+    }
+
+    .login-footer a {
+        text-decoration: none;
+        color: #000;
+        font-weight: 600;
+        transition: 0.3s;
+    }
+
+    .login-footer a:hover {
+        text-decoration: underline;
+    }
+
+    @keyframes slideInLeft {
+        from { 
+            opacity: 0; 
+            transform: translateX(-50px);
+        }
+        to { 
+            opacity: 1; 
+            transform: translateX(0);
+        }
+    }
+
+    @media(max-width: 768px) {
+        .login-container {
+            margin-left: 0;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+        }
+
+        .login-card {
+            width: 100%;
+            max-width: 400px;
+            padding: 35px 30px;
+        }
+
+        .login-bg {
+            padding: 20px;
+            justify-content: center;
+        }
+    }
+</style>
+
+
+<div class="login-bg">
+    <div class="login-container">
+        <form class="login-card" method="POST">
+            {% csrf_token %}
+            
+            <div class="login-header">
+                <h2>Welcome Back</h2>
+                <p>Login to continue to your account</p>
+            </div>
+
+            <div class="input-group">
+                <i class="fas fa-user"></i>
+                <input type="text" name="username" placeholder="Username" required>
+            </div>
+
+            <div class="input-group">
+                <i class="fas fa-lock"></i>
+                <input type="password" name="password" placeholder="Password" required>
+            </div>
+
+            <div class="forgot-password">
+                <a href="#">Forgot Password?</a>
+            </div>
+
+            <button type="submit" class="login-btn">Login</button>
+
+            <div class="divider">or continue with</div>
+
+            <div class="social-login">
+                <button type="button" class="social-btn">
+                    <i class="fab fa-google"></i>
+                </button>
+                <button type="button" class="social-btn">
+                    <i class="fab fa-facebook-f"></i>
+                </button>
+                <button type="button" class="social-btn">
+                    <i class="fab fa-apple"></i>
+                </button>
+            </div>
+
+            <div class="login-footer">
+                <p>Don't have an account? <a href="/register/">Create Account</a></p>
+            </div>
+        </form>
+    </div>
+</div>
+
+{% endblock %}
