@@ -1,1 +1,1 @@
-web: gunicorn jwellery.wsgi
+web: gunicorn jwellery.wsgi:application
