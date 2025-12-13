@@ -48,6 +48,24 @@
         transition: 0.3s;
     }
 
+    /* Prevent button from touching image in mobile/tab */
+@media (max-width: 900px) {
+    .hero-btn {
+        margin-top: 20px;        /* Adds spacing above */
+        margin-bottom: 25px;     /* Adds spacing below */
+        padding: 12px 24px;      /* Slightly larger button for mobile */
+    }
+}
+
+@media (max-width: 600px) {
+    .hero-btn {
+        margin-top: 25px;
+        margin-bottom: 30px;     /* More space on small phones */
+        padding: 14px 26px;
+    }
+}
+
+
     .hero-btn:hover {
         background: #000;
         color: #fff;
